@@ -53,3 +53,9 @@ class Tour(models.Model):
                                          default=None, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return u'Tour {0}: (Start Date: {1}, End Date: {2}, Status: {3})'.format(self.pk,
+                                                                                 self.start_date,
+                                                                                 self.end_date,
+                                                                                 self.status)
