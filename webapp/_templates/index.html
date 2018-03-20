@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Travel App Sample">
+    <meta name="author" content="John Francis I. Ibañez, Jr.">
+
+    <title>Travel App</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+    <!-- Custom styles for this template -->
+    <link href="form-validation.css" rel="stylesheet">
+  </head>
+
+  <body class="bg-light">
+
+    <div class="container">
+      <div class="py-5 text-center">
+        <h2>Travel Portal</h2>
+      </div>
+
+        <div class="col-md-12 order-md-12">
+          <h4 class="mb-3">Tour</h4>
+          <form class="needs-validation" novalidate>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" placeholder="" value="">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="startDate">Start Date</label>
+                <input type="text" class="form-control" id="startDate" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Valid date is required.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="endDate">End Date</label>
+                <input type="text" class="form-control" id="endDate" placeholder="" value="" required>
+                <div class="invalid-feedback">
+                  Valid date is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="transport">Transport</label>
+              <div class="input-group">
+                <select class="custom-select d-block w-100" id="transport" required>
+                  <option value="">Choose...</option>
+                  <option>Plane</option>
+                </select>
+                <div class="invalid-feedback" style="width: 100%;">
+                  Valid Transport is required.
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="ticketCost">Ticket Cost</label>
+              <input type="ticketCost" class="form-control" id="ticketCost" placeholder="1" required>
+              <div class="invalid-feedback">
+                Please enter a valid cost for tickets.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="homeCabCost">Home Cab Cost</label>
+              <input type="text" class="form-control" id="homeCabCost" placeholder="1" required>
+              <div class="invalid-feedback">
+                Please enter a valid cost for a cab to home.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address2">Destination Cab Cost</label>
+              <input type="text" class="form-control" id="destCabCost" placeholder="1" required>
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2017-2018 Company Name</p>
+        <ul class="list-inline">
+          <li class="list-inline-item"><a href="#">Privacy</a></li>
+          <li class="list-inline-item"><a href="#">Terms</a></li>
+          <li class="list-inline-item"><a href="#">Support</a></li>
+        </ul>
+      </footer>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script>
+      // Example starter JavaScript for disabling form submissions if there are invalid fields
+      (function() {
+        'use strict';
+
+        window.addEventListener('load', function() {
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var forms = document.getElementsByClassName('needs-validation');
+
+          // Loop over them and prevent submission
+          var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+              if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+              }
+              form.classList.add('was-validated');
+            }, false);
+          });
+        }, false);
+      })();
+    </script>
+  </body>
+</html>
