@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import ast
 import os
+import re
 import sys
 
 def env(key, default=None, valuetype=str, required=False, nullable=bool):
@@ -194,6 +195,10 @@ ALLOWED_HOSTS = [
     STATIC_URL_DOMAIN,
 ]
 
+LOGIN_REDIRECT_URL='/tours/'
+
+ALLOWED_HOSTS.extend(re.split(',', API_ALLOWED_HOSTS))
+
 LOGGING_VERBOSE_FORMAT = '%(asctime)s [%(process)d] ' + \
     '%(module)s:%(lineno)d %(levelname)s %(message)s'
 
@@ -226,6 +231,9 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+        'rest_framework.permissions.AllowAny'
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
