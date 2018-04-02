@@ -138,14 +138,8 @@
                     </select>
                   </div>
                   <div class="modal-footer">
-                    {% if is_worker %}
                     <button type="submit" class="btn btn-secondary" id="draft" name="draft" value="draft">Save as Draft</button>
                     <button type="submit" class="btn btn-primary" id="submit" name="submit" value="save">Submit</button>
-                    {% else %}
-                    <button type="submit" class="btn btn-secondary" id="reject" name="reject" value="rfi">Reject</button>
-                    <button type="submit" class="btn btn-secondary" id="rfi" name="rfi" value="rfi">Request for Information</button>
-                    <button type="submit" class="btn btn-primary" id="approve" name="approve" value="approve">Approve</button>
-                    {% endif %}
                   </div>
                 </form>
               </div>
@@ -175,17 +169,13 @@
           </thead>
           <tbody>
           {% for tour in tours %}
+            {% if is_worker%}
             <tr>
               <th scope="row">{{ tour.pk }}</th>
               <td>{{ tour.start_date }}</td>
               <td>{{ tour.end_date }}</td>
-              {% if is_worker %}
               <td>{{ tour.manager }}</td>
               <td>{{ tour.finance_manager }}</td>
-              {% endif %}
-              {% if not is_worker %}
-              <td>{{ tour.worker }}</td>
-              {% endif %}
               {% if tour.status == 'draft' %}
               <td><span class="badge badge-secondary">{{ tour.status }}</span></td>
               {% endif %}
@@ -203,7 +193,172 @@
               {% endif %}
               <td>{{ tour.created }}</td>
               <td>{{ tour.modified }}</td>
-            </tr>
+              <td><a class="btn btn-small" data-toggle="modal" data-target="#viewTourModal{{ tour.pk }}">Details</a></td>
+            </tr>                                                                          
+            {% else %}
+              {% if tour.status != 'draft' %}
+            <tr>
+              <th scope="row">{{ tour.pk }}</th>
+              <td>{{ tour.start_date }}</td>
+              <td>{{ tour.end_date }}</td>
+              <td>{{ tour.worker }}</td>
+              {% if tour.status == 'submitted' %}
+              <td><span class="badge badge-primary">{{ tour.status }}</span></td>
+              {% endif %}
+              {% if tour.status == 'approved' %}
+              <td><span class="badge badge-success">{{ tour.status }}</span></td>
+              {% endif %}
+              {% if tour.status == 'rejected' %}
+              <td><span class="badge badge-danger">{{ tour.status }}</span></td>
+              {% endif %}
+              {% if tour.status == 'request_for_information' %}
+              <td><span class="badge badge-info">{{ tour.status }}</span></td>
+              {% endif %}
+              <td>{{ tour.created }}</td>
+              <td>{{ tour.modified }}</td>
+              <td><a class="btn btn-small" data-toggle="modal" data-target="#viewTourModal{{ tour.pk }}">Details</a></td>
+            </tr>                                                                          
+              {% endif %}
+            {% endif %}
+
+            <div class="modal fade" id="viewTourModal{{ tour.pk }}" tabindex="-1" role="dialog" aria-la belledby="viewTourModalLabel{{ tour.pk }}" aria-hidden="true">
+              <div class="modal-dialog" role="document">                                   
+                <div class="modal-content">                                                
+                  <div class="modal-header">                                               
+                    <h5 class="modal-title" id="viewTourModalLabel{{ tour.pk }}">View Tour</h5>         
+                      <button type="button" class="close" data-dismiss="modal" aria-label= "Close">
+                        <span aria-hidden="true">&times;</span>                            
+                      </button>                                                            
+                  </div>                                                                   
+                  <div class="modal-body">                                                 
+                    <form class="form-horizontal" action="{% url 'index' %}" method="put"> 
+                      {% csrf_token %}                                                     
+                      <div class="form-group">                                             
+                        <label class="control-label" for="description">Description</label> 
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose">{{ tour.description }}</textarea>
+                      </div>                                                               
+                                                                                           
+                      <div class="form-row">                                               
+                        <div class="form-group">                                           
+                          <label class="control-label" for="startDate">Start Date</label>  
+                          <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}">
+                        </div>                                                             
+                                                                                           
+                        <div class="form-group ml-4">                                      
+                          <label class="control-label" for="endDate">End Date</label>      
+                          <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}">
+                        </div>                                                             
+                      </div>                                                               
+                                                                                           
+                      <div class="form-row">                                               
+                        <div class="form-group">                                           
+                          <label class="control-label" for="homeCab">Home Cab Cost</label> 
+                          <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}">
+                        </div>                                                             
+                                                                                           
+                        <div class="form-group ml-4">                                      
+                          <label class="control-label" for="destination">Destination Cab Cost</label>
+                          <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}">
+                        </div>                                                             
+                      </div>                                                               
+                                                                                           
+                      <h6 class="mb-3">Place to stay</h5>                                  
+                      <div class="form-group">                                             
+                        <label class="control-label" for="hotel">Hotel</label>             
+                        <select class="form-control" id="hotel" name="hotel">              
+                          {% for hotel in hotels %}                                        
+                            {% if hotel.name == tour.hotel_cost.hotel.name%}
+                          <option selected>{{ hotel.name }}</option>                                
+                            {% else %}
+                          <option>{{ hotel.name }}</option>                                
+                            {% endif %}
+                          {% endfor %}                                                     
+                        </select>                                                          
+                      </div>                                                               
+                                                                                           
+                      <div class="form-row">                                               
+                        <div class="form-group">                                         
+                          <label class="control-label" for="hotelCurrency">Hotel Currency</label>
+                          <select class="form-control" id="hotelCurrency" name="hotelCurrency">
+                            {% for currency in currencies %}                               
+                              {% if currency.currency == tour.hotel_cost.currency.currency %}
+                            <option selected>{{ currency.currency }}</option>                       
+                              {% else %}
+                            <option>{{ currency.currency }}</option>                       
+                              {% endif %}
+                            {% endfor %}                                                   
+                          </select>                                                        
+                        </div>                                                             
+                                                                                           
+                        <div class="form-group ml-4">                                      
+                          <label class="control-label" for="hotelCost">Hotel Cost</label>  
+                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}">
+                        </div>                                                             
+                      </div>                                                               
+                                                                                           
+                      <h6 class="mb-3">Mode of Transport</h5>                              
+                      <div class="form-group mb-3">                                        
+                        <label class="control-label" for="transportType">Transport Type</label>
+                        <select class="form-control" id="transportType" name="transportType">
+                          {% for transport in transport_types %}                           
+                            {% if transport.name == tour.ticket.transport.transport_type%}
+                          <option selected>{{ transport.name }}</option>                            
+                            {% else %}
+                          <option>{{ transport.name }}</option>                            
+                            {% endif %}
+                          {% endfor %}                                                     
+                        </select>                                                          
+                      </div>                                                               
+                                                                                           
+                      <div class="form-row">                                               
+                        <div class="form-group  ">                                         
+                          <label class="control-label" for="transportCurrency">Transport Currency</label>
+                          <select class="form-control" id="transportCurrency" name="transportCurrency">
+                            {% for currency in currencies %}                               
+                              {% if currency.currency == tour.ticket.currency.currency %}
+                            <option selected>{{ currency.currency }}</option>                       
+                              {% else %}
+                            <option>{{ currency.currency }}</option>                       
+                              {% endif %}
+                            <option>{{ currency.currency }}</option>                       
+                            {% endfor %}                                                   
+                          </select>                                                        
+                        </div>                                                             
+                                                                                           
+                        <div class="form-group ml-4">                                      
+                          <label class="control-label" for="transportCost">Transport Cost</label>
+                          <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}">
+                        </div>                                                             
+                      </div>                                                               
+                                                                                           
+                      <div class="form-group mb-3">                                        
+                        <label class="control-label" for="approvingManager">Approving Manager</label>
+                        <select class="form-control" id="approvingManager" name="approvingManager">
+                          {% for manager in managers %}                                    
+                            {% if manager.pk == tour.manager.user.first_name %}
+                          <option selected value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
+                            {% else %}
+                          <option value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
+                            {% endif %}
+                          {% endfor %}                                                     
+                        </select>                                                          
+                      </div>                                                               
+                      <div class="modal-footer">                                           
+                        {% if is_worker %}                                                 
+                            {% if tour.status == 'draft' %}
+                        <button type="submit" class="btn btn-primary" id="update" name="update" value="update">Update</button>
+                            {% endif %}
+                        {% else %}                                                         
+                        <button type="submit" class="btn btn-danger" id="reject" name=" reject" value="rfi">Reject</button>
+                        <button type="submit" class="btn btn-info" id="rfi" name="rfi " value="rfi">Request for Information</button>
+                        <button type="submit" class="btn btn-primary" id="approve" name="approve" value="approve">Approve</button>
+                        {% endif %}                                                        
+                      </div>                                                               
+                    </form>                                                                
+                  </div>                                                                   
+                </div>                                                                     
+              </div>                                                                       
+            </div>
           {% endfor %}
           </tbody>
         </table>
@@ -224,8 +379,6 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script>
