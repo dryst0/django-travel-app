@@ -22,6 +22,11 @@
   <body class="bg-light">
 
     <div class="container">
+      <div class="mt-3 mb-3 float-right">
+          <a class="btn btn-primary" href="{% url 'logout'%}?next={% url 'login' %}">
+          Logout
+          </a>
+      </div>
       <div class="py-5 text-center">
         <h2>Travel Portal</h2>
       </div>
@@ -231,41 +236,65 @@
                       </button>                                                            
                   </div>                                                                   
                   <div class="modal-body">                                                 
-                    <form class="form-horizontal" action="{% url 'index' %}" method="put"> 
+                    <form class="form-horizontal" action="{% url 'index' %}" method="post"> 
                       {% csrf_token %}                                                     
                       <div class="form-group">                                             
                         <label class="control-label" for="description">Description</label> 
+                        {% if is_worker %}
                         <textarea class="form-control" id="description" name="description" placeholder="Enter purpose">{{ tour.description }}</textarea>
+                        {% else %}
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose" readonly>{{ tour.description }}</textarea>
+                        {% endif %}
                       </div>                                                               
                                                                                            
                       <div class="form-row">                                               
                         <div class="form-group">                                           
                           <label class="control-label" for="startDate">Start Date</label>  
+                          {% if is_worker %}
                           <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}">
+                          {% else %}
+                          <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}" readonly>
+                          {% endif %}
                         </div>                                                             
                                                                                            
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="endDate">End Date</label>      
+                          {% if is_worker %}
                           <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}">
+                          {% else %}
+                          <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}" readonly>
+                          {% endif %}
                         </div>                                                             
                       </div>                                                               
                                                                                            
                       <div class="form-row">                                               
                         <div class="form-group">                                           
                           <label class="control-label" for="homeCab">Home Cab Cost</label> 
+                          {% if is_worker %}
                           <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}">
+                          {% else %}
+                          <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}" readonly>
+                          {% endif %}
                         </div>                                                             
                                                                                            
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="destination">Destination Cab Cost</label>
+                          {% if is_worker %}
                           <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}">
+                          {% else %}
+                          <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}" readonly>
+                          {% endif %}
                         </div>                                                             
                       </div>                                                               
                                                                                            
                       <h6 class="mb-3">Place to stay</h5>                                  
                       <div class="form-group">                                             
                         <label class="control-label" for="hotel">Hotel</label>             
+                        {% if is_worker%}
                         <select class="form-control" id="hotel" name="hotel">              
+                        {% else %}
+                        <select class="form-control" id="hotel" name="hotel" disabled>
+                        {% endif %}
                           {% for hotel in hotels %}                                        
                             {% if hotel.name == tour.hotel_cost.hotel.name%}
                           <option selected>{{ hotel.name }}</option>                                
@@ -279,7 +308,11 @@
                       <div class="form-row">                                               
                         <div class="form-group">                                         
                           <label class="control-label" for="hotelCurrency">Hotel Currency</label>
+                          {% if is_worker%}
                           <select class="form-control" id="hotelCurrency" name="hotelCurrency">
+                          {% else %}
+                          <select class="form-control" id="hotelCurrency" name="hotelCurrency" disabled>
+                          {% endif %}
                             {% for currency in currencies %}                               
                               {% if currency.currency == tour.hotel_cost.currency.currency %}
                             <option selected>{{ currency.currency }}</option>                       
@@ -292,14 +325,22 @@
                                                                                            
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="hotelCost">Hotel Cost</label>  
+                          {% if is_worker%}
                           <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}">
+                          {% else %}
+                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}" readonly>
+                          {% endif %}
                         </div>                                                             
                       </div>                                                               
                                                                                            
                       <h6 class="mb-3">Mode of Transport</h5>                              
                       <div class="form-group mb-3">                                        
                         <label class="control-label" for="transportType">Transport Type</label>
+                        {% if is_worker%}
                         <select class="form-control" id="transportType" name="transportType">
+                        {% else %}
+                        <select class="form-control" id="transportType" name="transportType" readonly>
+                        {% endif %}
                           {% for transport in transport_types %}                           
                             {% if transport.name == tour.ticket.transport.transport_type%}
                           <option selected>{{ transport.name }}</option>                            
@@ -313,7 +354,11 @@
                       <div class="form-row">                                               
                         <div class="form-group  ">                                         
                           <label class="control-label" for="transportCurrency">Transport Currency</label>
+                          {% if is_worker%}
                           <select class="form-control" id="transportCurrency" name="transportCurrency">
+                          {% else %}
+                          <select class="form-control" id="transportCurrency" name="transportCurrency" disabled>
+                          {% endif %}
                             {% for currency in currencies %}                               
                               {% if currency.currency == tour.ticket.currency.currency %}
                             <option selected>{{ currency.currency }}</option>                       
@@ -327,13 +372,21 @@
                                                                                            
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="transportCost">Transport Cost</label>
+                          {% if is_worker%}
                           <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}">
+                          {% else %}
+                          <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}" readonly>
+                          {% endif %}
                         </div>                                                             
                       </div>                                                               
                                                                                            
                       <div class="form-group mb-3">                                        
                         <label class="control-label" for="approvingManager">Approving Manager</label>
+                        {% if is_worker%}
                         <select class="form-control" id="approvingManager" name="approvingManager">
+                        {% else %}
+                        <select class="form-control" id="approvingManager" name="approvingManager" disabled>
+                        {% endif %}
                           {% for manager in managers %}                                    
                             {% if manager.pk == tour.manager.user.first_name %}
                           <option selected value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
@@ -347,6 +400,7 @@
                         {% if is_worker %}                                                 
                             {% if tour.status == 'draft' %}
                         <button type="submit" class="btn btn-primary" id="update" name="update" value="update">Update</button>
+                        <button type="submit" class="btn btn-primary" id="update" name="save" value="save">Submit</button>
                             {% endif %}
                         {% else %}                                                         
                         <button type="submit" class="btn btn-danger" id="reject" name=" reject" value="rfi">Reject</button>

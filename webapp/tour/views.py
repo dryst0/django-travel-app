@@ -56,6 +56,17 @@ def index(request):
             transport_cost = request.POST.get("transportCost")
             status = Tour.DRAFT if request.POST.get("draft") else Tour.SUBMITTED
             manager = request.POST.get("approvingManager")
+
+            if request.POST.get("draft") or request.POST.get("update"):
+                status = Tour.DRAFT
+            elif request.POST.get("save"):
+                status = Tour.SUBMITTED
+            elif request.POST.get("rfi"):
+                status = Tour.REQUEST_FOR_INFORMATION
+            elif request.POST.get("approved"):
+                status = Tour.APPROVED
+            elif request.POST.get("reject"):
+                status = Tour.REJECT
             
             hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
             ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)

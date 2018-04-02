@@ -66,7 +66,7 @@ class Hotel(models.Model):
 
 class HotelCost(models.Model):
     hotel = models.ForeignKey(Hotel, on_delete=models.CASCADE, related_name='hotel_cost',
-                                 db_index=True)
+                              db_index=True)
     currency = models.ForeignKey(Currency, on_delete=models.CASCADE, related_name='hotel_cost',
                                  db_index=True)
     cost = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
@@ -104,7 +104,7 @@ class Tour(models.Model):
     home_cab = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     dest_cab = models.DecimalField(max_digits=8, decimal_places=2, default=0.00)
     hotel_cost = models.ForeignKey(HotelCost, on_delete=models.CASCADE, related_name='tour',
-                              null=True)
+                                   null=True)
     status = models.CharField(max_length=32, choices=APPROVAL_STATUS_CHOICES, default=DRAFT,
                               db_index=True)
     worker = models.ForeignKey(Employee, on_delete=models.PROTECT, related_name='tour_worker',
