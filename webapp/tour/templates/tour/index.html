@@ -466,7 +466,7 @@
                         <select class="form-control" id="approvingManager" name="approvingManager" readonly>
                         {% endif %}
                           {% for manager in managers %}                                    
-                            {% if manager.pk == tour.manager.user.first_name %}
+                            {% if manager.pk == tour.manager.pk %}
                           <option selected value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
                             {% else %}
                           <option value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
@@ -474,6 +474,7 @@
                           {% endfor %}                                                     
                         </select>                                                          
                       </div>                                                               
+
                       <div class="modal-footer">                                           
                         <input type="hidden" id="tourId" name="tourId" value="{{ tour.pk }}">
                         {% if is_worker %}
