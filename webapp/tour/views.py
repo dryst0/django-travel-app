@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 
 from employee.models import Employee
 
@@ -26,14 +26,14 @@ def index(request):
         else:
             if employee.employee_type == 'manager':
                 tour_list = Tour.objects.filter(Q(status=Tour.SUBMITTED) |
-                                                Q(status=Tour.REJECTED) |
                                                 Q(status=Tour.REQUEST_FOR_INFORMATION) |
-                                                Q(manager=employee))
+                                                Q(status=Tour.APPROVED),
+                                                manager=employee)
             elif employee.employee_type == 'finance_manager':
                 tour_list = Tour.objects.filter(Q(status=Tour.SUBMITTED) |
-                                                Q(status=Tour.REJECTED) |
                                                 Q(status=Tour.REQUEST_FOR_INFORMATION) |
-                                                Q(manager__isNone=False))
+                                                Q(status=Tour.APPROVED),
+                                                manager__isNone=False)
 
     if request.method == "POST":
         tour_list = Tour.objects.filter(worker=employee)
@@ -53,7 +53,6 @@ def index(request):
         transport_type = request.POST.get("transportType")
         transport_currency = request.POST.get("transportCurrency")
         transport_cost = request.POST.get("transportCost")
-        status = Tour.DRAFT if request.POST.get("draft") else Tour.SUBMITTED
         manager = request.POST.get("approvingManager")
         hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
         ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)
@@ -67,18 +66,18 @@ def index(request):
         elif request.POST.get("approve"):
             status = Tour.APPROVED
         elif request.POST.get("reject"):
-            status = Tour.REJECT
+            status = Tour.REJECTED
 
-        if is_worker:
-            if request.POST.get("tourId"):
+        if request.POST.get("tourId"):
+            if is_worker:
                 tour = Tour.objects.filter(pk=request.POST.get("tourId"))
                 tour.update(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
             else:
-                Tour.objects.create(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
-        else:
-            if request.POST.get("tourId"):
                 tour = Tour.objects.filter(pk=request.POST.get("tourId"))
                 tour.update(status=status)
+            return redirect("/tours/")
+        else:
+            Tour.objects.create(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
 
     context = {
         'tours': tour_list,

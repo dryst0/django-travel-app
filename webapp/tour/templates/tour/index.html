@@ -263,7 +263,7 @@
               {% endif %}
               <td>{{ tour.created }}</td>
               <td>{{ tour.modified }}</td>
-              <td><a class="btn btn-small" data-toggle="modal" data-target="#viewTourModal{{ tour.pk }}">Details</a></td>
+              <td><a class="btn btn-small" data-toggle="modal" data-target="#viewTourModal{{ tour.pk }}"><span class="fa fa-info"></span></a></td>
             </tr>                                                                          
               {% endif %}
             {% endif %}
@@ -353,7 +353,7 @@
                           Hotel required.
                         </div>
                         {% else %}
-                        <select class="form-control" id="hotel" name="hotel" disabled>
+                        <select class="form-control" id="hotel" name="hotel" readonly>
                         {% endif %}
                           {% for hotel in hotels %}                                        
                             {% if hotel.name == tour.hotel_cost.hotel.name%}
@@ -374,7 +374,7 @@
                             Hotel Currency required.
                           </div>
                           {% else %}
-                          <select class="form-control" id="hotelCurrency" name="hotelCurrency" disabled>
+                          <select class="form-control" id="hotelCurrency" name="hotelCurrency" readonly>
                           {% endif %}
                             {% for currency in currencies %}                               
                               {% if currency.currency == tour.hotel_cost.currency.currency %}
@@ -429,7 +429,7 @@
                             Transport Currency required.
                           </div>
                           {% else %}
-                          <select class="form-control" id="transportCurrency" name="transportCurrency" disabled>
+                          <select class="form-control" id="transportCurrency" name="transportCurrency" readonly>
                           {% endif %}
                             {% for currency in currencies %}                               
                               {% if currency.currency == tour.ticket.currency.currency %}
@@ -463,7 +463,7 @@
                           Approving Manager required.
                         </div>
                         {% else %}
-                        <select class="form-control" id="approvingManager" name="approvingManager" disabled>
+                        <select class="form-control" id="approvingManager" name="approvingManager" readonly>
                         {% endif %}
                           {% for manager in managers %}                                    
                             {% if manager.pk == tour.manager.user.first_name %}
@@ -483,7 +483,7 @@
                             {% endif %}
                         {% else %}                                                         
                         <button type="submit" class="btn btn-danger" id="reject" name="reject" value="reject">Reject</button>
-                        <button type="submit" class="btn btn-info" id="rfi" name="rfi "value="rfi">Request for Information</button>
+                        <button type="submit" class="btn btn-info" id="rfi" name="rfi" value="rfi">Request for Information</button>
                         <button type="submit" class="btn btn-primary" id="approve" name="approve" value="approve">Approve</button>
                         {% endif %}                                                        
                       </div>                                                               
