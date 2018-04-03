@@ -55,6 +55,8 @@ def index(request):
         transport_cost = request.POST.get("transportCost")
         status = Tour.DRAFT if request.POST.get("draft") else Tour.SUBMITTED
         manager = request.POST.get("approvingManager")
+        hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
+        ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)
 
         if request.POST.get("draft") or request.POST.get("update"):
             status = Tour.DRAFT
@@ -72,8 +74,6 @@ def index(request):
                 tour = Tour.objects.filter(pk=request.POST.get("tourId"))
                 tour.update(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
             else:
-                hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
-                ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)
                 Tour.objects.create(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
         else:
             if request.POST.get("tourId"):
