@@ -36,41 +36,49 @@ def index(request):
                                                 Q(manager__isNone=False))
 
     if request.method == "POST":
+        tour_list = Tour.objects.filter(worker=employee)
+        transports = Transport.objects.all()
+        currencies = Currency.objects.all()
+        hotels = Hotel.objects.all()
+        managers = Employee.objects.filter(employee_type=Employee.MANAGER)
+
+        description = request.POST.get("description")
+        start_date = request.POST.get("startDate")
+        end_date = request.POST.get("endDate")
+        home_cab = request.POST.get("homeCab")
+        dest_cab = request.POST.get("destCab")
+        hotel = request.POST.get("hotel")
+        hotel_currency = request.POST.get("hotelCurrency")
+        hotel_cost = request.POST.get("hotelCost")
+        transport_type = request.POST.get("transportType")
+        transport_currency = request.POST.get("transportCurrency")
+        transport_cost = request.POST.get("transportCost")
+        status = Tour.DRAFT if request.POST.get("draft") else Tour.SUBMITTED
+        manager = request.POST.get("approvingManager")
+
+        if request.POST.get("draft") or request.POST.get("update"):
+            status = Tour.DRAFT
+        elif request.POST.get("save") or request.POST.get("submit"):
+            status = Tour.SUBMITTED
+        elif request.POST.get("rfi"):
+            status = Tour.REQUEST_FOR_INFORMATION
+        elif request.POST.get("approve"):
+            status = Tour.APPROVED
+        elif request.POST.get("reject"):
+            status = Tour.REJECT
+
         if is_worker:
-            tour_list = Tour.objects.filter(worker=employee)
-            transports = Transport.objects.all()
-            currencies = Currency.objects.all()
-            hotels = Hotel.objects.all()
-            managers = Employee.objects.filter(employee_type=Employee.MANAGER)
-
-            description = request.POST.get("description")
-            start_date = request.POST.get("startDate")
-            end_date = request.POST.get("endDate")
-            home_cab = request.POST.get("homeCab")
-            dest_cab = request.POST.get("destCab")
-            hotel = request.POST.get("hotel")
-            hotel_currency = request.POST.get("hotelCurrency")
-            hotel_cost = request.POST.get("hotelCost")
-            transport_type = request.POST.get("transportType")
-            transport_currency = request.POST.get("transportCurrency")
-            transport_cost = request.POST.get("transportCost")
-            status = Tour.DRAFT if request.POST.get("draft") else Tour.SUBMITTED
-            manager = request.POST.get("approvingManager")
-
-            if request.POST.get("draft") or request.POST.get("update"):
-                status = Tour.DRAFT
-            elif request.POST.get("save"):
-                status = Tour.SUBMITTED
-            elif request.POST.get("rfi"):
-                status = Tour.REQUEST_FOR_INFORMATION
-            elif request.POST.get("approved"):
-                status = Tour.APPROVED
-            elif request.POST.get("reject"):
-                status = Tour.REJECT
-            
-            hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
-            ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)
-            Tour.objects.create(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
+            if request.POST.get("tourId"):
+                tour = Tour.objects.filter(pk=request.POST.get("tourId"))
+                tour.update(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
+            else:
+                hc = HotelCost.objects.create(hotel=Hotel.objects.get(name=hotel), currency=Currency.objects.get(currency=hotel_currency), cost=hotel_cost)
+                ticket = Ticket.objects.create(transport=Transport.objects.get(name=transport_type), currency=Currency.objects.get(currency=transport_currency), cost=transport_cost)
+                Tour.objects.create(description=description, start_date=start_date, end_date=end_date, home_cab=home_cab, dest_cab=dest_cab, hotel_cost=hc, ticket=ticket, status=status, worker=employee, manager=Employee.objects.get(pk=manager))
+        else:
+            if request.POST.get("tourId"):
+                tour = Tour.objects.filter(pk=request.POST.get("tourId"))
+                tour.update(status=status)
 
     context = {
         'tours': tour_list,

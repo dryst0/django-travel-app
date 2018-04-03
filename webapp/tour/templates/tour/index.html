@@ -53,96 +53,132 @@
                       </button>
                   </div>
                   <div class="modal-body">
-                    <form class="form-horizontal" action="{% url 'index' %}" method="post">
+                    <form class="form-horizontal needs-validation" action="{% url 'index' %}" method="post" novalidate>
                       {% csrf_token %}
                       <div class="form-group">
                         <label class="control-label" for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose"></textarea>
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose" required></textarea>
+                        <div class="invalid-feedback">
+                          Description required.
+                        </div>
                       </div>
 
                       <div class="form-row">
                         <div class="form-group">
                           <label class="control-label" for="startDate">Start Date</label>
-                          <input type="date" class="form-control" id="startDate" name="startDate">
+                          <input type="date" class="form-control" id="startDate" name="startDate" required>
+                          <div class="invalid-feedback">
+                            Start Date required.
+                          </div>
                         </div>
 
                         <div class="form-group ml-4">
                           <label class="control-label" for="endDate">End Date</label>
-                          <input type="date" class="form-control" id="endDate" name="endDate">
+                          <input type="date" class="form-control" id="endDate" name="endDate" required>
+                        </div>
+                        <div class="invalid-feedback">
+                          End Date required.
                         </div>
                       </div>
 
                       <div class="form-row">
                         <div class="form-group">
                           <label class="control-label" for="homeCab">Home Cab Cost</label>
-                          <input type="text" class="form-control" id="homeCab" name="homeCab">
+                          <input type="text" class="form-control" id="homeCab" name="homeCab" required>
+                          <div class="invalid-feedback">
+                            Home Cab required.
+                          </div>
                         </div>
 
                         <div class="form-group ml-4">
                           <label class="control-label" for="destination">Destination Cab Cost</label>
-                          <input type="text" class="form-control" id="destCab" name="destCab">
+                          <input type="text" class="form-control" id="destCab" name="destCab" required>
+                          <div class="invalid-feedback">
+                            Destination Cab required.
+                          </div>
                         </div>
                       </div>
 
                       <h6 class="mb-3">Place to stay</h5>
                       <div class="form-group">
                         <label class="control-label" for="hotel">Hotel</label>
-                        <select class="form-control" id="hotel" name="hotel">
+                        <select class="form-control" id="hotel" name="hotel" required>
                           {% for hotel in hotels %}
                           <option>{{ hotel.name }}</option>
                           {% endfor %}
                         </select>
+                        <div class="invalid-feedback">
+                          Hotel required.
+                        </div>
                       </div>
 
                       <div class="form-row">
                         <div class="form-group  ">
                           <label class="control-label" for="hotelCurrency">Hotel Currency</label>
-                          <select class="form-control" id="hotelCurrency" name="hotelCurrency">
+                          <select class="form-control" id="hotelCurrency" name="hotelCurrency" required>
                             {% for currency in currencies %}
                             <option>{{ currency.currency }}</option>
                             {% endfor %}
                           </select>
+                          <div class="invalid-feedback">
+                            Hotel Currency required.
+                          </div>
                         </div>
 
                         <div class="form-group ml-4">
                           <label class="control-label" for="hotelCost">Hotel Cost</label>
-                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost">
+                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" required>
+                          <div class="invalid-feedback">
+                            Hotel Cost required.
+                          </div>
                         </div>
                       </div>
 
                       <h6 class="mb-3">Mode of Transport</h5>
                       <div class="form-group mb-3">
                         <label class="control-label" for="transportType">Transport Type</label>
-                        <select class="form-control" id="transportType" name="transportType">
+                        <select class="form-control" id="transportType" name="transportType" required>
                           {% for transport in transport_types %}
                           <option>{{ transport.name }}</option>
                           {% endfor %}
                         </select>
+                        <div class="invalid-feedback">
+                          Transport Type required.
+                        </div>
                       </div>
 
                       <div class="form-row">
                         <div class="form-group  ">
                           <label class="control-label" for="transportCurrency">Transport Currency</label>
-                          <select class="form-control" id="transportCurrency" name="transportCurrency">
+                          <select class="form-control" id="transportCurrency" name="transportCurrency" required>
                             {% for currency in currencies %}
                             <option>{{ currency.currency }}</option>
                             {% endfor %}
                           </select>
+                          <div class="invalid-feedback">
+                            Transport Currency required.
+                          </div>
                         </div>
 
                         <div class="form-group ml-4">
                           <label class="control-label" for="transportCost">Transport Cost</label>
-                          <input type="text" class="form-control" id="transportCost" placeholder="0.00" name="transportCost">
+                          <input type="text" class="form-control" id="transportCost" placeholder="0.00" name="transportCost" required>
+                          <div class="invalid-feedback">
+                            Transport Cost required.
+                          </div>
                         </div>
                       </div>
 
                       <div class="form-group mb-3">
                         <label class="control-label" for="approvingManager">Approving Manager</label>
-                        <select class="form-control" id="approvingManager" name="approvingManager">
+                        <select class="form-control" id="approvingManager" name="approvingManager" required>
                           {% for manager in managers %}
                           <option value="{{ manager.pk }}">{{ manager.user.first_name }} {{ manager.user.last_name }}</option>
                           {% endfor %}
                         </select>
+                        <div class="invalid-feedback">
+                          Approving Manager required.
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="submit" class="btn btn-secondary" id="draft" name="draft" value="draft">Save as Draft</button>
@@ -242,12 +278,15 @@
                       </button>                                                            
                   </div>                                                                   
                   <div class="modal-body">                                                 
-                    <form class="form-horizontal" action="{% url 'index' %}" method="post"> 
+                    <form class="form-horizontal needs-validation" action="{% url 'index' %}" method="post" novalidate> 
                       {% csrf_token %}                                                     
                       <div class="form-group">                                             
                         <label class="control-label" for="description">Description</label> 
                         {% if is_worker and tour.status == 'draft' %}
-                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose">{{ tour.description }}</textarea>
+                        <textarea class="form-control" id="description" name="description" placeholder="Enter purpose" required>{{ tour.description }}</textarea>
+                        <div class="invalid-feedback">
+                          Description required.
+                        </div>
                         {% else %}
                         <textarea class="form-control" id="description" name="description" placeholder="Enter purpose" readonly>{{ tour.description }}</textarea>
                         {% endif %}
@@ -257,7 +296,10 @@
                         <div class="form-group">                                           
                           <label class="control-label" for="startDate">Start Date</label>  
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}">
+                          <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}" required>
+                          <div class="invalid-feedback">
+                            Start Date required.
+                          </div>
                           {% else %}
                           <input type="date" class="form-control" id="startDate" name="startDate" value="{{ tour.start_date|date:"Y-m-d" }}" readonly>
                           {% endif %}
@@ -266,7 +308,10 @@
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="endDate">End Date</label>      
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}">
+                          <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}" required>
+                          <div class="invalid-feedback">
+                            End Date required.
+                          </div>
                           {% else %}
                           <input type="date" class="form-control" id="endDate" name="endDate" value="{{ tour.end_date|date:"Y-m-d" }}" readonly>
                           {% endif %}
@@ -277,7 +322,10 @@
                         <div class="form-group">                                           
                           <label class="control-label" for="homeCab">Home Cab Cost</label> 
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}">
+                          <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}" required>
+                          <div class="invalid-feedback">
+                            Home Cab required.
+                          </div>
                           {% else %}
                           <input type="text" class="form-control" id="homeCab" name="homeCab" value="{{ tour.home_cab }}" readonly>
                           {% endif %}
@@ -286,7 +334,10 @@
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="destination">Destination Cab Cost</label>
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}">
+                          <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}" required>
+                          <div class="invalid-feedback">
+                            Destination Cab required.
+                          </div>
                           {% else %}
                           <input type="text" class="form-control" id="destCab" name="destCab" value="{{ tour.dest_cab }}" readonly>
                           {% endif %}
@@ -297,7 +348,10 @@
                       <div class="form-group">                                             
                         <label class="control-label" for="hotel">Hotel</label>             
                         {% if is_worker and tour.status == 'draft' %}
-                        <select class="form-control" id="hotel" name="hotel">              
+                        <select class="form-control" id="hotel" name="hotel" required>
+                        <div class="invalid-feedback">
+                          Hotel required.
+                        </div>
                         {% else %}
                         <select class="form-control" id="hotel" name="hotel" disabled>
                         {% endif %}
@@ -315,7 +369,10 @@
                         <div class="form-group">                                         
                           <label class="control-label" for="hotelCurrency">Hotel Currency</label>
                           {% if is_worker and tour.status == 'draft' %}
-                          <select class="form-control" id="hotelCurrency" name="hotelCurrency">
+                          <select class="form-control" id="hotelCurrency" name="hotelCurrency" required>
+                          <div class="invalid-feedback">
+                            Hotel Currency required.
+                          </div>
                           {% else %}
                           <select class="form-control" id="hotelCurrency" name="hotelCurrency" disabled>
                           {% endif %}
@@ -332,7 +389,10 @@
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="hotelCost">Hotel Cost</label>  
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}">
+                          <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}" required>
+                          <div class="invalid-feedback">
+                            Hotel Cost required.
+                          </div>
                           {% else %}
                           <input type="text" class="form-control" id="hotelCost" placeholder="0.00" name="hotelCost" value="{{ tour.hotel_cost.cost }}" readonly>
                           {% endif %}
@@ -343,7 +403,10 @@
                       <div class="form-group mb-3">                                        
                         <label class="control-label" for="transportType">Transport Type</label>
                         {% if is_worker and tour.status == 'draft' %}
-                        <select class="form-control" id="transportType" name="transportType">
+                        <select class="form-control" id="transportType" name="transportType" required>
+                        <div class="invalid-feedback">
+                          Transport Type required.
+                        </div>
                         {% else %}
                         <select class="form-control" id="transportType" name="transportType" readonly>
                         {% endif %}
@@ -361,7 +424,10 @@
                         <div class="form-group  ">                                         
                           <label class="control-label" for="transportCurrency">Transport Currency</label>
                           {% if is_worker and tour.status == 'draft' %}
-                          <select class="form-control" id="transportCurrency" name="transportCurrency">
+                          <select class="form-control" id="transportCurrency" name="transportCurrency" required>
+                          <div class="invalid-feedback">
+                            Transport Currency required.
+                          </div>
                           {% else %}
                           <select class="form-control" id="transportCurrency" name="transportCurrency" disabled>
                           {% endif %}
@@ -379,7 +445,10 @@
                         <div class="form-group ml-4">                                      
                           <label class="control-label" for="transportCost">Transport Cost</label>
                           {% if is_worker and tour.status == 'draft' %}
-                          <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}">
+                          <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}" required>
+                          <div class="invalid-feedback">
+                            Transport Cost required.
+                          </div>
                           {% else %}
                           <input type="text" class="form-control" id="transportCost" place holder="0.00" name="transportCost" value="{{ tour.ticket.cost }}" readonly>
                           {% endif %}
@@ -389,7 +458,10 @@
                       <div class="form-group mb-3">                                        
                         <label class="control-label" for="approvingManager">Approving Manager</label>
                         {% if is_worker and tour.status == 'draft' %}
-                        <select class="form-control" id="approvingManager" name="approvingManager">
+                        <select class="form-control" id="approvingManager" name="approvingManager" required>
+                        <div class="invalid-feedback">
+                          Approving Manager required.
+                        </div>
                         {% else %}
                         <select class="form-control" id="approvingManager" name="approvingManager" disabled>
                         {% endif %}
@@ -403,14 +475,15 @@
                         </select>                                                          
                       </div>                                                               
                       <div class="modal-footer">                                           
+                        <input type="hidden" id="tourId" name="tourId" value="{{ tour.pk }}">
                         {% if is_worker %}
                             {% if tour.status == 'draft' %}
                         <button type="submit" class="btn btn-primary" id="update" name="update" value="update">Update</button>
-                        <button type="submit" class="btn btn-primary" id="update" name="save" value="save">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="save" name="save" value="save">Submit</button>
                             {% endif %}
                         {% else %}                                                         
-                        <button type="submit" class="btn btn-danger" id="reject" name=" reject" value="rfi">Reject</button>
-                        <button type="submit" class="btn btn-info" id="rfi" name="rfi " value="rfi">Request for Information</button>
+                        <button type="submit" class="btn btn-danger" id="reject" name="reject" value="reject">Reject</button>
+                        <button type="submit" class="btn btn-info" id="rfi" name="rfi "value="rfi">Request for Information</button>
                         <button type="submit" class="btn btn-primary" id="approve" name="approve" value="approve">Approve</button>
                         {% endif %}                                                        
                       </div>                                                               
